@@ -8,10 +8,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Link } from "react-router";
 
 export function NavMain({ items }) {
   return (
-    <SidebarGroup>
+    <SidebarGroup className={'py-1'}>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
@@ -24,9 +25,9 @@ export function NavMain({ items }) {
                 item.items.map((subItem) => (
                   <SidebarMenuItem key={subItem.title}>
                     <SidebarMenuButton asChild>
-                      <a href={subItem.url}>
+                      <Link to={subItem.url}>
                         <span>{subItem.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

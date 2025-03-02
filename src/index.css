@@ -114,6 +114,41 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@font-face {
+  font-family: 'TT Commons';
+  src: url('/src/assets/tt-commons/TT\ Commons\ Regular.otf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TT Commons';
+  src: url('/src/assets/tt-commons/TT\ Commons\ Medium.otf');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TT Commons';
+  src: url('/src/assets/tt-commons/TT\ Commons\ Bold.otf');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TT Commons';
+  src: url('/src/assets/tt-commons/TT\ Commons\ Black.otf');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TT Commons';
+  src: url('/src/assets/tt-commons/TT\ Commons\ Regular\ Italic.otf');
+  font-weight: 400;
+  font-style: italic;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -121,4 +156,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html {
+  font-family: 'TT Commons', sans-serif;
 }

@@ -3,7 +3,7 @@ import {
   Archive,
   FileChartColumn,
   LayoutDashboard,
-  ShoppingBasket,
+  Pill,
   ShoppingCart,
   Users,
 } from "lucide-react"
@@ -23,6 +23,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Link } from "react-router"
+import { CollapsibleItem } from "./nav-projects"
 
 // This is sample data.
 const data = {
@@ -34,30 +35,39 @@ const data = {
   navMain: [
     {
       title: "Inventory",
-      url: "#",
+      url: "/inventory",
       icon: Archive,
     },
     {
       title: "Purchases",
-      url: "#",
+      url: "/purchases",
       icon: ShoppingCart,
     },
     {
-      title: "Sales",
-      url: "#",
-      icon: ShoppingBasket,
-    },
-    {
       title: "Customers",
-      url: "#",
+      url: "/customers",
       icon: Users,
     },
     {
       title: "Reports",
-      url: "#",
+      url: "/reports",
       icon: FileChartColumn,
     },
   ],
+  dispenser: {
+    title: "Dispenser",
+    icon: Pill,
+    items: [
+      {
+        title: "Invoice",
+        url: "/invoice"
+      },
+      {
+        title: "Sales",
+        url: "/sales"
+      }
+    ]
+  },
 }
 
 export function AppSidebar({
@@ -68,8 +78,8 @@ export function AppSidebar({
       <SidebarHeader>
         <SidebarLogo />
       </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
+      <SidebarContent className={'gap-0'}>
+        <SidebarGroup className={'pb-1'}>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -83,6 +93,7 @@ export function AppSidebar({
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <CollapsibleItem items={data.dispenser} />
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
