@@ -7,6 +7,7 @@ import MainLayout from './layout/MainLayout'
 import NotFound from './pages/NotFound'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
+import Inventory from './pages/Inventory'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<App />} />
+          <Route path="inventory" element={<Inventory />} />
           <Route path='*' element={<NotFound />} />
         </Route>
         <Route>

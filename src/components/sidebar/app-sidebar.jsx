@@ -1,4 +1,3 @@
-import * as React from "react"
 import {
   Archive,
   FileChartColumn,
@@ -22,7 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Link } from "react-router"
+import { Link, useLocation } from "react-router"
 import { CollapsibleItem } from "./nav-projects"
 
 // This is sample data.
@@ -59,6 +58,10 @@ const data = {
     icon: Pill,
     items: [
       {
+        title: "Point of Sale",
+        url: "/pos"
+      },
+      {
         title: "Invoice",
         url: "/invoice"
       },
@@ -73,6 +76,9 @@ const data = {
 export function AppSidebar({
   ...props
 }) {
+  const location = useLocation();
+  const isActive = location.pathname === "/";
+
   return (
     (<Sidebar {...props}>
       <SidebarHeader>
@@ -83,7 +89,7 @@ export function AppSidebar({
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive>
+                <SidebarMenuButton asChild isActive={isActive}>
                   <Link to={`/`}>
                     <LayoutDashboard />
                     Home

@@ -1,13 +1,48 @@
 /* eslint-disable react/prop-types */
-import { Card, CardContent } from './ui/card'
-import { ChevronDown, ChevronRight, PillBottle, Repeat,TrendingUp, TrendingDown } from 'lucide-react'
-import { Link } from 'react-router'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { Button } from './ui/button';
-import { ChartContainer, ChartLegendContent, ChartTooltip, ChartTooltipContent } from './ui/chart';
-import { Bar, BarChart, CartesianGrid, Label, Legend, PieChart, Pie, XAxis, YAxis } from 'recharts';
-import { formatSuffix } from '@/lib/formatMoney';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Card, CardContent } from "./ui/card";
+import {
+  ChevronDown,
+  ChevronRight,
+  PillBottle,
+  Repeat,
+  TrendingUp,
+  TrendingDown,
+} from "lucide-react";
+import { Link } from "react-router";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import { Button } from "./ui/button";
+import {
+  ChartContainer,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "./ui/chart";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Label,
+  Legend,
+  PieChart,
+  Pie,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { formatSuffix } from "@/lib/formatMoney";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const data = {
   expireData: [
@@ -15,68 +50,68 @@ const data = {
       medicineName: "Paracetamol",
       expireDate: "1 Jan 2025",
       daysUntilExpiry: 20,
-      quantity: 10
+      quantity: 10,
     },
     {
       medicineName: "Paracetamol",
       expireDate: "1 Jan 2025",
       daysUntilExpiry: 20,
-      quantity: 10
+      quantity: 10,
     },
     {
       medicineName: "Paracetamol",
       expireDate: "1 Jan 2025",
       daysUntilExpiry: 20,
-      quantity: 10
+      quantity: 10,
     },
     {
       medicineName: "Paracetamol",
       expireDate: "1 Jan 2025",
       daysUntilExpiry: 20,
-      quantity: 10
+      quantity: 10,
     },
     {
       medicineName: "Paracetamol",
       expireDate: "1 Jan 2025",
       daysUntilExpiry: 20,
-      quantity: 10
+      quantity: 10,
     },
   ],
   ordersData: [
     {
       medicineName: "Paracetamol",
-      batch: "001032501",
+      batch: "20230101-001",
       status: "delivered",
       quantity: 30,
-      price: `$${18.00}`
+      price: `$${18.0}`,
     },
     {
       medicineName: "Paracetamol",
-      batch: "001032501",
+      batch: "20230101-001",
       status: "pending",
       quantity: 30,
-      price: `$${18.00}`
+      price: `$${18.0}`,
     },
     {
       medicineName: "Paracetamol",
-      batch: "001032501",
+      batch: "20230101-001",
       status: "delivered",
       quantity: 30,
-      price: `$${18.00}`
+      price: `$${18.0}`,
     },
     {
       medicineName: "Paracetamol",
-      batch: "001032501",
+      batch: "20230101-001",
       status: "cancelled",
       quantity: 30,
-      price: `$${18.00}`
+      price: `$${18.0}`,
     },
     {
       medicineName: "Paracetamol",
-      batch: "001032501",
+      batch: "20230101-001",
       status: "pending",
       quantity: 30,
-      price: `$${18.00}`
+      price: `$${18.0}`,
     },
   ],
   monthlyProgress: [
@@ -96,8 +131,8 @@ const data = {
   todayReport: [
     { label: "sales", amount: 19381, fill: "#2662D9" },
     { label: "expenses", amount: 7823, fill: "#E23670" },
-  ]
-}
+  ],
+};
 
 const BigWidget = ({ type, className }) => {
   let content;
@@ -123,21 +158,21 @@ const BigWidget = ({ type, className }) => {
             <TableHead>Restock</TableHead>
           </TableRow>
         ),
-        body: (
-          data.expireData.map((medicine, index) => (
-            <TableRow key={index}>
-              <TableCell className="font-medium">{medicine.medicineName}</TableCell>
-              <TableCell className="font-medium">{medicine.expireDate}</TableCell>
-              <TableCell>{medicine.daysUntilExpiry}</TableCell>
-              <TableCell>{medicine.quantity}</TableCell>
-              <TableCell>
-                <Button size="iconSm" variant="restock" className="rounded-sm">
-                  <Repeat />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))
-        )
+        body: data.expireData.map((medicine, index) => (
+          <TableRow key={index}>
+            <TableCell className="font-medium">
+              {medicine.medicineName}
+            </TableCell>
+            <TableCell className="font-medium">{medicine.expireDate}</TableCell>
+            <TableCell>{medicine.daysUntilExpiry}</TableCell>
+            <TableCell>{medicine.quantity}</TableCell>
+            <TableCell>
+              <Button size="iconSm" variant="restock" className="rounded-sm">
+                <Repeat />
+              </Button>
+            </TableCell>
+          </TableRow>
+        )),
       };
       break;
     case 2:
@@ -157,21 +192,29 @@ const BigWidget = ({ type, className }) => {
             <TableHead className="text-right">Price</TableHead>
           </TableRow>
         ),
-        body: (
-          data.ordersData.map((medicine, index) => (
-            <TableRow key={index}>
-              <TableCell className="font-medium">{medicine.medicineName}</TableCell>
-              <TableCell className="font-medium">{medicine.batch}</TableCell>
-              <TableCell>
-                <div className={`${medicine.status === 'delivered' ? 'bg-green-100 text-green-500' : medicine.status === 'pending' ? 'bg-yellow-100/90 text-yellow-500' : 'bg-red-100/90 text-red-500'} rounded px-2 py-0.5 w-fit`}>
-                  {medicine.status}
-                </div>
-              </TableCell>
-              <TableCell>{medicine.quantity}</TableCell>
-              <TableCell className="text-right">{medicine.price}</TableCell>
-            </TableRow>
-          ))
-        )
+        body: data.ordersData.map((medicine, index) => (
+          <TableRow key={index}>
+            <TableCell className="font-medium">
+              {medicine.medicineName}
+            </TableCell>
+            <TableCell className="font-medium">{medicine.batch}</TableCell>
+            <TableCell>
+              <div
+                className={`${
+                  medicine.status === "delivered"
+                    ? "bg-green-100 text-green-500"
+                    : medicine.status === "pending"
+                    ? "bg-yellow-100/90 text-yellow-500"
+                    : "bg-red-100/90 text-red-500"
+                } rounded px-2 py-0.5 w-fit`}
+              >
+                {medicine.status}
+              </div>
+            </TableCell>
+            <TableCell>{medicine.quantity}</TableCell>
+            <TableCell className="text-right">{medicine.price}</TableCell>
+          </TableRow>
+        )),
       };
       break;
     case 3:
@@ -188,7 +231,7 @@ const BigWidget = ({ type, className }) => {
           label: "Expenses",
           color: "#DF356F",
         },
-      }
+      };
       chartJSX = (
         <BarChart accessibilityLayer data={data.monthlyProgress}>
           <CartesianGrid />
@@ -197,7 +240,7 @@ const BigWidget = ({ type, className }) => {
             tickLine={false}
             tickFormatter={(value) => value.slice(0, 3)}
           />
-          <YAxis 
+          <YAxis
             tickLine={false}
             axisLine={false}
             tickFormatter={(value) => `$${value}`}
@@ -209,7 +252,7 @@ const BigWidget = ({ type, className }) => {
           <Bar dataKey="sales" fill="var(--color-sales)" radius={1} />
           <Bar dataKey="expenses" fill="var(--color-expenses)" radius={1} />
         </BarChart>
-      )
+      );
       break;
     case 4:
       content = {
@@ -224,69 +267,76 @@ const BigWidget = ({ type, className }) => {
           label: "Expenses",
           color: "#DF356F",
         },
-      }
+      };
       chartJSX = (
         <PieChart>
           <ChartTooltip
             cursor={false}
             content={<ChartTooltipContent nameKey="label" />}
           />
-          <Pie 
+          <Pie
             data={data.todayReport}
-            nameKey="label" 
+            nameKey="label"
             dataKey="amount"
             innerRadius={70}
             strokeWidth={5}
-            minAngle={90} 
-            legendType='square' >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    const profit = data.todayReport[0].amount - data.todayReport[1].amount;
-                    const isProfit = profit > 0;
-                    
-                    return (
-                      <foreignObject 
-                        x={viewBox.cx - 60} 
-                        y={viewBox.cy - 40} 
-                        width={120} 
-                        height={80}
-                      >
-                        <div className="flex flex-col items-center justify-center h-full">
-                          <div className={`text-3xl font-bold`}>
-                            {isProfit ? `+$${formatSuffix(profit)}` : `-$${formatSuffix(Math.abs(profit))}`}
-                          </div>
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            {isProfit ? (
-                              <>
-                                Profit <TrendingUp className="h-4 w-4" />
-                              </>
-                            ) : (
-                              <>
-                                Loss <TrendingDown className="h-4 w-4" />
-                              </>
-                            )}
-                          </div>
+            minAngle={90}
+            legendType="square"
+          >
+            <Label
+              content={({ viewBox }) => {
+                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  const profit =
+                    data.todayReport[0].amount - data.todayReport[1].amount;
+                  const isProfit = profit > 0;
+
+                  return (
+                    <foreignObject
+                      x={viewBox.cx - 60}
+                      y={viewBox.cy - 40}
+                      width={120}
+                      height={80}
+                    >
+                      <div className="flex flex-col items-center justify-center h-full">
+                        <div className={`text-3xl font-bold`}>
+                          {isProfit
+                            ? `+$${formatSuffix(profit)}`
+                            : `-$${formatSuffix(Math.abs(profit))}`}
                         </div>
-                      </foreignObject>
-                    );
-                  }
-                }}
-              />
+                        <div className="flex items-center gap-1 text-muted-foreground">
+                          {isProfit ? (
+                            <>
+                              Profit <TrendingUp className="h-4 w-4" />
+                            </>
+                          ) : (
+                            <>
+                              Loss <TrendingDown className="h-4 w-4" />
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </foreignObject>
+                  );
+                }
+              }}
+            />
           </Pie>
-          <Legend 
+          <Legend
             width={120}
-            verticalAlign='middle' layout="vertical" align="right" 
-            content={<ChartLegendContent />} />
+            verticalAlign="middle"
+            layout="vertical"
+            align="right"
+            content={<ChartLegendContent />}
+          />
         </PieChart>
-      )
+      );
       break;
     default:
       content = {
         title: "Unknown",
         link: "/",
         icon: <PillBottle className="text-white/95" />,
-        bgColor: "bg-gray-500"
+        bgColor: "bg-gray-500",
       };
       tableJSX = [];
       break;
@@ -298,40 +348,39 @@ const BigWidget = ({ type, className }) => {
         <div className="flex justify-between">
           <h1 className="font-medium text-lg">{content.title}</h1>
           {content.hasLink ? (
-          <div className="flex gap-2 cursor-pointer">
-            <p className="text-blue-500">See All</p>
-            <div className="bg-gray-100 rounded-xs">
-              <ChevronRight />
+            <div className="flex gap-2 cursor-pointer">
+              <p className="text-blue-500">See All</p>
+              <div className="bg-gray-100 rounded-xs">
+                <ChevronRight />
+              </div>
             </div>
-          </div>
           ) : content.hasDropdown ? (
             <Select defaultValue="monthly-progress">
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Monthly Progress" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="monthly-progress">Monthly Progress</SelectItem>
+                <SelectItem value="monthly-progress">
+                  Monthly Progress
+                </SelectItem>
                 <SelectItem value="daily-progress">Daily Progress</SelectItem>
               </SelectContent>
             </Select>
           ) : null}
         </div>
         {content.isTable ? (
-        <Table>
-          <TableHeader>
-            {tableJSX.header}
-          </TableHeader>
-          <TableBody>
-            {tableJSX.body}
-          </TableBody>
-        </Table>) : (
-          <ChartContainer config={chartConfig} className={'h-full'}>
+          <Table>
+            <TableHeader>{tableJSX.header}</TableHeader>
+            <TableBody>{tableJSX.body}</TableBody>
+          </Table>
+        ) : (
+          <ChartContainer config={chartConfig} className={"h-full"}>
             {chartJSX}
           </ChartContainer>
         )}
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default BigWidget
+export default BigWidget;
