@@ -67,7 +67,7 @@ const Inventory = () => {
   });
 
   return (
-    <section className="py-2 px-4">
+    <section className="py-2 px-4 bg-[#F6F6F6]">
       <h1 className="text-2xl font-medium mb-4">Inventory</h1>
       <div className="flex justify-between items-end">
         <div className="flex gap-4 items-end">

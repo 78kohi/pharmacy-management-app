@@ -22,7 +22,7 @@ const NotFound = () => {
             <Button variant={'outline'} onClick={() => navigate(-1)} className="cursor-pointer">
               Go Back <ArrowLeft />
             </Button>
-            <Button onClick={() => navigate('/')} className="cursor-pointer">
+            <Button variant={'blue'} onClick={() => navigate('/')} className="cursor-pointer">
               Dashboard <LayoutDashboard />
             </Button>
           </div>
