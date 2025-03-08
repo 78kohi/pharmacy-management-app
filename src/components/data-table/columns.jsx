@@ -15,6 +15,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 
 const columnHelper = createColumnHelper();
 
+/**
+ * Columns configuration for the medicines data table.
+ * @type {Array<Object>}
+ */
 export const medColumns = [
   {
     id: "select",

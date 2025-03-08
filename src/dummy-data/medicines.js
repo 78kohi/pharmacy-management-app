@@ -29,7 +29,7 @@ export const tableData = [
     purchaseDate: "2023-01-01",
     expiryDate: "2025-10-01",
     quantity: 316,
-    unitPrice: 0.50,
+    unitPrice: 0.5,
     status: "in stock",
   },
   {
@@ -39,7 +39,7 @@ export const tableData = [
     purchaseDate: "2023-02-01",
     expiryDate: "2025-02-01",
     quantity: 242,
-    unitPrice: 0.60,
+    unitPrice: 0.6,
     status: "in stock",
   },
   {
@@ -49,7 +49,7 @@ export const tableData = [
     purchaseDate: "2023-03-01",
     expiryDate: "2025-03-01",
     quantity: 837,
-    unitPrice: 1.00,
+    unitPrice: 1.0,
     status: "low stock",
   },
   {
@@ -59,7 +59,7 @@ export const tableData = [
     purchaseDate: "2023-04-01",
     expiryDate: "2025-04-01",
     quantity: 874,
-    unitPrice: 0.40,
+    unitPrice: 0.4,
     status: "in stock",
   },
   {
@@ -69,7 +69,7 @@ export const tableData = [
     purchaseDate: "2023-05-01",
     expiryDate: "2025-05-01",
     quantity: 721,
-    unitPrice: 0.30,
+    unitPrice: 0.3,
     status: "expired",
   },
   {
@@ -79,7 +79,7 @@ export const tableData = [
     purchaseDate: "2023-06-01",
     expiryDate: "2025-06-01",
     quantity: 500,
-    unitPrice: 0.70,
+    unitPrice: 0.7,
     status: "in stock",
   },
   {
@@ -109,7 +109,7 @@ export const tableData = [
     purchaseDate: "2023-09-01",
     expiryDate: "2025-09-01",
     quantity: 600,
-    unitPrice: 0.20,
+    unitPrice: 0.2,
     status: "in stock",
   },
   {
@@ -129,7 +129,7 @@ export const tableData = [
     purchaseDate: "2023-11-01",
     expiryDate: "2025-11-01",
     quantity: 150,
-    unitPrice: 1.20,
+    unitPrice: 1.2,
     status: "in stock",
   },
   {
@@ -139,7 +139,7 @@ export const tableData = [
     purchaseDate: "2023-12-01",
     expiryDate: "2025-12-01",
     quantity: 200,
-    unitPrice: 2.50,
+    unitPrice: 2.5,
     status: "in stock",
   },
   {
@@ -149,7 +149,7 @@ export const tableData = [
     purchaseDate: "2024-01-01",
     expiryDate: "2026-01-01",
     quantity: 400,
-    unitPrice: 0.80,
+    unitPrice: 0.8,
     status: "in stock",
   },
   {
@@ -159,7 +159,7 @@ export const tableData = [
     purchaseDate: "2024-02-01",
     expiryDate: "2026-02-01",
     quantity: 350,
-    unitPrice: 0.90,
+    unitPrice: 0.9,
     status: "in stock",
   },
   {
@@ -169,7 +169,7 @@ export const tableData = [
     purchaseDate: "2024-03-01",
     expiryDate: "2026-03-01",
     quantity: 500,
-    unitPrice: 0.70,
+    unitPrice: 0.7,
     status: "in stock",
   },
   {
@@ -179,7 +179,7 @@ export const tableData = [
     purchaseDate: "2024-04-01",
     expiryDate: "2026-04-01",
     quantity: 250,
-    unitPrice: 5.00,
+    unitPrice: 5.0,
     status: "in stock",
   },
   {
@@ -189,7 +189,7 @@ export const tableData = [
     purchaseDate: "2024-05-01",
     expiryDate: "2026-05-01",
     quantity: 300,
-    unitPrice: 4.50,
+    unitPrice: 4.5,
     status: "in stock",
   },
   {
@@ -199,7 +199,7 @@ export const tableData = [
     purchaseDate: "2024-06-01",
     expiryDate: "2026-06-01",
     quantity: 400,
-    unitPrice: 2.00,
+    unitPrice: 2.0,
     status: "in stock",
   },
   {
@@ -209,7 +209,7 @@ export const tableData = [
     purchaseDate: "2024-07-01",
     expiryDate: "2026-07-01",
     quantity: 500,
-    unitPrice: 6.00,
+    unitPrice: 6.0,
     status: "in stock",
   },
   {
@@ -219,14 +219,16 @@ export const tableData = [
     purchaseDate: "2024-08-01",
     expiryDate: "2026-08-01",
     quantity: 450,
-    unitPrice: 6.50,
+    unitPrice: 6.5,
     status: "in stock",
   },
-].map(item => {
+].map((item) => {
   const today = new Date();
   const expiryDate = new Date(item.expiryDate);
-  const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
-  
+  const daysUntilExpiry = Math.ceil(
+    (expiryDate - today) / (1000 * 60 * 60 * 24)
+  );
+
   let status;
   if (daysUntilExpiry < 0) {
     status = "expired";
@@ -243,8 +245,8 @@ export const tableData = [
   return {
     ...item,
     daysUntilExpiry,
-    status
+    status,
   };
 });
 
-export const categories = [...new Set(tableData.map(item => item.category))]
+export const categories = [...new Set(tableData.map((item) => item.category))];

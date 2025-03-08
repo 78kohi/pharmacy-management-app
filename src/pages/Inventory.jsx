@@ -20,6 +20,11 @@ import { Toaster } from '@/components/ui/sonner'
 import { CalendarDatePicker } from '@/components/calendar-date-picker'
 import { FilterX } from 'lucide-react'
 
+/**
+ * Inventory component that displays the inventory of medicines.
+ * Includes filters for medicine name and date range, and a table to display the data.
+ * @returns {JSX.Element}
+ */
 const Inventory = () => {
   const [sorting, setSorting] = React.useState([])
   const [columnFilters, setColumnFilters] = React.useState([])
