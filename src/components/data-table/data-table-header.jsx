@@ -66,26 +66,7 @@ export function DataTableColumnHeader({ column, title, className }) {
   );
 }
 
-const statuses = [
-  {
-    value: "in stock",
-    label: "In Stock",
-  },
-  {
-    value: "low stock",
-    label: "Low Stock",
-  },
-  {
-    value: "expiring",
-    label: "Expiring",
-  },
-  {
-    value: "expired",
-    label: "Expired",
-  },
-]
-
-export const DataTableStatusColumnHeader = ({ column, className }) => {
+export const DataTableStatusColumnHeader = ({ column, className, statuses }) => {
   const facets = column?.getFacetedUniqueValues(); 
   const selectedValues = new Set(column?.getFilterValue()); 
 
@@ -113,7 +94,11 @@ export const DataTableStatusColumnHeader = ({ column, className }) => {
                   const bgColor =
                     status.value === "in stock"
                       ? "bg-green-200 text-green-600"
+                      : status.value === "paid"
+                      ? "bg-green-200 text-green-600"
                       : status.value === "low stock"
+                      ? "bg-yellow-200 text-yellow-600"
+                      : status.value === "pending"
                       ? "bg-yellow-200 text-yellow-600"
                       : status.value === "expiring"
                       ? "bg-orange-200 text-orange-600"

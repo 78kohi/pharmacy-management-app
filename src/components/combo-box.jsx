@@ -75,18 +75,18 @@ export const ComboBox = ({ table }) => {
     </Popover>
   )
 }
-export const CustomersComboBox = ({ value, setValue }) => {
+export const CustomersComboBox = ({ value, setValue, width, variant }) => {
   const [open, setOpen] = React.useState(false)
   
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant={variant}
           size={"sm"}
           role="combobox"
           aria-expanded={open}
-          className="w-[120px] justify-between text-muted-foreground"
+          className={`${width} justify-between text-muted-foreground`}
         >
           {value
             ? customers.find((customer) => customer.value === value)?.label

@@ -6,12 +6,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { FileDown, MoreHorizontal } from "lucide-react"
+import { Eye, FileDown, MoreHorizontal, Printer, SquarePen } from "lucide-react"
 import { createColumnHelper } from "@tanstack/react-table";
 import { format, parseISO, isWithinInterval } from "date-fns";
 import { toast } from "sonner";
 import { DataTableColumnHeader, DataTableStatusColumnHeader } from "./data-table-header";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import Invoice from "../Invoice";
 
 const columnHelper = createColumnHelper();
 
@@ -70,7 +72,7 @@ export const medColumns = [
   columnHelper.accessor("expiryDate", {
     header: "Expiry Date",
     cell: (info) => format(parseISO(info.getValue()), "PPP"),
-    filterFn: (row, columnId, filterValue) => {
+filterFn: (row, columnId, filterValue) => {
       const expiryDate = parseISO(row.getValue(columnId));
       return isWithinInterval(expiryDate, {
         start: filterValue.startDate,
@@ -101,7 +103,25 @@ export const medColumns = [
   }),
   columnHelper.accessor("status", {
     header: ({ column }) => {
-      return <DataTableStatusColumnHeader column={column} />;
+const medStatus = [
+        {
+          value: "in stock",
+          label: "In Stock",
+        },
+        {
+          value: "low stock",
+          label: "Low Stock",
+        },
+        {
+          value: "expiring",
+          label: "Expiring",
+        },
+        {
+          value: "expired",
+          label: "Expired",
+        },
+      ];
+      return <DataTableStatusColumnHeader column={column} statuses={medStatus} />;
     },
     cell: (info) => {
       const status = info.getValue();
@@ -134,7 +154,7 @@ export const medColumns = [
   {
     id: "actions",
     enableHiding: false,
-    header: () => {
+header: () => {
       return (
       <TooltipProvider>
         <Tooltip>
@@ -167,11 +187,174 @@ export const medColumns = [
             >
               Copy batch number
             </DropdownMenuItem>
-            <DropdownMenuItem>View medicine</DropdownMenuItem>
+            <DropdownMenuItem>View medicine            </DropdownMenuItem>
             <DropdownMenuItem>Edit medicine</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
   },
+];
+
+export const salesColumns = ({ editInvoice }) => [
+  columnHelper.accessor("invoiceId", {
+    header: "Invoice ID",
+    cell: (info) => <div>{info.getValue()}</div>,
+  }),
+  columnHelper.accessor("date", {
+    header: "Date",
+    cell: (info) => format(info.getValue(), "PPP"),
+    filterFn: (row, columnId, filterValue) => {
+      const purchaseDate = parseISO(row.getValue(columnId));
+      return isWithinInterval(purchaseDate, {
+        start: filterValue.startDate,
+        end: filterValue.endDate,
+      });
+    },
+  }),
+  columnHelper.accessor("customer", {
+    header: "Customer",
+    cell: (info) => <div className="capitalize">{info.getValue()}</div>,
+  }),
+  columnHelper.accessor("netTotal", {
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"Net Total"} />
+    ),
+    cell: (info) => {
+      const amount = parseFloat(info.getValue());
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+      return <div className="font-medium">{formatted}</div>;
+    },
+  }),
+  columnHelper.accessor("paidAmount", {
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"Paid Amount"} />
+    ),
+    cell: (info) => {
+      const amount = parseFloat(info.getValue());
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+      return <div className="font-medium">{formatted}</div>;
+    },
+  }),
+  columnHelper.accessor("change", {
+    header: "Change",
+    cell: ({ row }) => {
+      const isPaid = parseFloat(row.original.paidAmount) >= parseFloat(row.original.netTotal);
+      const change = isPaid ? 
+        new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(parseFloat(row.original.paidAmount) - parseFloat(row.original.netTotal)) :
+        "not paid";
+      return <div className="font-medium capitalize">{change}</div>;
+    },
+  }),
+  columnHelper.accessor("paymentType", {
+    header: "Payment Type",
+    cell: (info) => <div className="capitalize">{info.getValue()}</div>
+  }),
+  columnHelper.accessor("status", {
+    header: ({ column }) => {
+      const salesStatus = [
+        {
+          value: "in stock",
+          label: "In Stock",
+        },
+        {
+          value: "low stock",
+          label: "Low Stock",
+        },
+        {
+          value: "expiring",
+          label: "Expiring",
+        },
+      ];
+      return (
+        <DataTableStatusColumnHeader column={column} statuses={salesStatus} />
+      );
+    },
+    cell: (info) => {
+      const status = info.getValue();
+      const bgColor =
+        status === "paid"
+          ? "bg-green-200 text-green-600"
+          : status === "pending"
+          ? "bg-yellow-200 text-yellow-600"
+          : "bg-red-200 text-red-600";
+
+      return (
+        <div className="text-right">
+          <div
+            className={`inline-flex items-center px-2 capitalize font-medium rounded ${bgColor}`}
+          >
+            <svg className="h-3 w-3 fill-current mr-1" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" />
+            </svg>
+            {status}
+          </div>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  }),
+  {
+    id: "action",
+    header: () => <div className="text-right">Actions</div>,
+    cell: ({ row }) => {
+      const invoice = row.original
+
+      const handleSave = (updatedData) => {
+        console.log(updatedData, updatedData.medicines, updatedData.change)
+        if (!updatedData.customer || !updatedData.paymentType) {
+        toast.error("Please fill in all required fields");
+        return;
+        }
+
+        editInvoice(invoice.invoiceId, updatedData);
+        toast.success("Invoice updated successfully!")
+      }
+
+      return (
+        <div className="flex gap-1.5 justify-end">
+          <Dialog>
+            <DialogTrigger className="grid place-items-center bg-accent h-5 w-5 rounded">
+              <Eye className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+            </DialogTrigger>
+            <DialogContent>
+              <Invoice 
+                {...invoice}
+              />
+            </DialogContent>
+            <DialogContent>
+              <Invoice 
+                {...invoice}
+              />
+            </DialogContent>
+          </Dialog>
+          <Dialog>
+            <DialogTrigger className="grid place-items-center bg-accent h-5 w-5 rounded">
+              <SquarePen className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+            </DialogTrigger>
+            <DialogContent>
+              <Invoice 
+                {...invoice}
+                editable
+                onSave={handleSave} />
+            </DialogContent>
+          </Dialog>
+          <div className="grid place-items-center bg-accent h-5 w-5 rounded">
+            <Printer className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+          </div>
+        </div>
+      );
+    }
+  }
 ];

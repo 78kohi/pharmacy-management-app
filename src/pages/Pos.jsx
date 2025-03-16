@@ -8,6 +8,8 @@ import { CustomersComboBox } from "@/components/combo-box";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useSales } from "@/hooks/use-sales";
 import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
+import { useNavigate } from "react-router";
 
 const Pos = () => {
   const [receiptOpen, setReceiptOpen] = React.useState(false);
@@ -16,6 +18,8 @@ const Pos = () => {
 
   const [paymentType, setPaymentType] = React.useState("");
   const [customer, setCustomer] = React.useState("");
+
+  const navigate = useNavigate()
 
   const now = new Date();
   const dueDate = new Date(now);
@@ -102,7 +106,6 @@ const Pos = () => {
   };
 
   const generateInvoiceId = () => {
-    const letter = "A";
     const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 
     const latestInvoice = invoices
@@ -113,25 +116,36 @@ const Pos = () => {
       ? String(Number(latestInvoice.invoiceId.slice(-3)) + 1).padStart(3, "0")
       : "001";
 
-    return `#${letter}-${date}${nextNumber}`;
+    return `${date}${nextNumber}`;
   };
 
   const saveInvoice = () => {
-    const newInvoice =
-   {
-    invoiceId: generateInvoiceId(),
-    date: formattedDate,
-    customer,
-    netTotal,
-    paidAmount: 0,
-    change: netTotal - 0, 
-    status: "Pending",
-    }
+    const totalAmount = addedMedicines.reduce(
+      (acc, item) => acc + item.totalPrice,
+      0
+    );
+
+    const newInvoice = {
+      invoiceId: generateInvoiceId(),
+      date: now.toISOString(),
+      dueDate,
+      customer: customer,
+      netTotal: totalAmount,
+      paidAmount: 0,
+      change: -totalAmount,
+      status: "pending",
+      medicines: addedMedicines,
+      paymentType,
+    };
     addInvoice(newInvoice);
-    console.log(newInvoice)
+    setReceiptOpen(false);
+    setAddedMedicines([]);
+    setPaymentType("");
+    setCustomer("");
     toast.success(`Invoice ${newInvoice.invoiceId} created successfully!`, {
-      action: <Button onClick={() => console.log("Action!")}>View invoices</Button>,
+      action: <Button onClick={() => navigate('/sales')}>View invoices</Button>,
     });
+    console.log(newInvoice)
   }
 
   return (
@@ -205,7 +219,7 @@ const Pos = () => {
                         key={med.medicine}
                       >
                         <p className="flex-1/5">{med.medicine}</p>
-                        <p className="flex-1 flex items-center gap-2">
+                        <p className="flex-1 flex items-center gap-2 select-none">
                           <Plus
                             className="h-4 w-4 text-gray-800 hover:bg-black/20 rounded-full transition"
                             onClick={() => addToReceipt(med)}
@@ -254,7 +268,7 @@ const Pos = () => {
                   </span>
                   <span className="flex justify-between items-center min-w-60">
                     Customer:
-                    <CustomersComboBox value={customer} setValue={setCustomer} />
+                    <CustomersComboBox value={customer} setValue={setCustomer} variant="outline" width={"min-w-30"} />
                   </span>
                   <span className="flex justify-between items-center min-w-60">
                     Payment Type:
@@ -262,7 +276,7 @@ const Pos = () => {
                       value={paymentType}
                       onValueChange={setPaymentType}
                     >
-                      <SelectTrigger className="w-[100px] h-8">
+                      <SelectTrigger className="min-w-[100px] max-w-[130px] h-8">
                         <SelectValue placeholder="Select..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -276,7 +290,15 @@ const Pos = () => {
                 </div>
               </div>
               <div className="flex gap-3 mt-3 px-3">
-                <Button variant={"secondary"} size={"sm"} className={"flex-1"}>
+                <Button 
+                  variant={"secondary"} size={"sm"} className={"flex-1"}
+                  onClick={() => {
+                    setReceiptOpen(false);
+                    setAddedMedicines([]);
+                    setPaymentType("");
+                    setCustomer("");
+                  }}
+                >
                   Cancel
                 </Button>
                 <Button 
@@ -290,6 +312,7 @@ const Pos = () => {
           </div>
         ) : null}
       </div>
+      <Toaster richColors />
     </section>
   );
 };

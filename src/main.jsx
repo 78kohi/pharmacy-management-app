@@ -10,6 +10,7 @@ import Signup from "./pages/auth/Signup";
 import Inventory from "./pages/Inventory";
 import Pos from "./pages/Pos";
 import { SalesProvider } from "./hooks/use-sales";
+import Sales from "./pages/Sales";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -20,6 +21,7 @@ createRoot(document.getElementById("root")).render(
             <Route index element={<App />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="pos" element={<Pos />} />
+            <Route path="sales" element={<Sales />} />
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route>

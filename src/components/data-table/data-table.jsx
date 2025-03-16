@@ -18,7 +18,7 @@ import { DataTablePagination } from "./pagination"
 export function DataTable({ table }) {
 
   return (
-    <div className="w-full mt-6">
+    <div className="w-full mt-6 bg-white">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
