@@ -12,13 +12,17 @@ The frontend for [Pharmacy_Management_System](https://github.com/abdoukare/Pharm
 ## Installation
 1. Clone the repository:
   ```bash
-  git clone https://github.com/yourusername/pharmacy-management.git
+  git clone https://github.com/78kohi/pharmacy-management-app.git
   ```
 2. Navigate to the project directory:
   ```bash
-  cd pharmacy-management
+  cd pharmacy-management-app
   ```
-3. Install dependencies:
+3. Code:
+  ```bash
+  code .
+  ```
+4. Install dependencies:
   ```bash
   npm install
   ```
@@ -26,9 +30,9 @@ The frontend for [Pharmacy_Management_System](https://github.com/abdoukare/Pharm
 ## Usage
 1. Start the development server:
   ```bash
-  npm start
+  npm run dev
   ```
-2. Open your browser and navigate to `http://localhost:3000`.
+2. Open your browser and navigate to `http://localhost:5173`.
 
 ## Technologies Used
 ![Techs](https://skillicons.dev/icons?i=mongo,express,react,nodejs,tailwind)

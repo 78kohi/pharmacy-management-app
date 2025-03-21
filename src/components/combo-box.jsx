@@ -75,7 +75,7 @@ export const ComboBox = ({ table }) => {
     </Popover>
   )
 }
-export const CustomersComboBox = ({ value, setValue, width, variant }) => {
+export const CustomersComboBox = ({ value, setValue, width, variant, avatar }) => {
   const [open, setOpen] = React.useState(false)
   
   return (
@@ -86,8 +86,9 @@ export const CustomersComboBox = ({ value, setValue, width, variant }) => {
           size={"sm"}
           role="combobox"
           aria-expanded={open}
-          className={`${width} justify-between text-muted-foreground`}
+          className={`max-w-${width} justify-between text-muted-foreground`}
         >
+          {avatar && avatar}
           {value
             ? customers.find((customer) => customer.value === value)?.label
             : "Select..."}

@@ -6,13 +6,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Eye, FileDown, MoreHorizontal, Printer, SquarePen } from "lucide-react"
+import { Banknote, CreditCard, Eye, FileDown, Landmark, MoreHorizontal, Printer, QrCode, SquarePen } from "lucide-react"
 import { createColumnHelper } from "@tanstack/react-table";
 import { format, parseISO, isWithinInterval } from "date-fns";
 import { toast } from "sonner";
 import { DataTableColumnHeader, DataTableStatusColumnHeader } from "./data-table-header";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui/dialog";
 import Invoice from "../Invoice";
 
 const columnHelper = createColumnHelper();
@@ -103,7 +103,7 @@ filterFn: (row, columnId, filterValue) => {
   }),
   columnHelper.accessor("status", {
     header: ({ column }) => {
-const medStatus = [
+      const medStatus = [
         {
           value: "in stock",
           label: "In Stock",
@@ -256,8 +256,41 @@ export const salesColumns = ({ editInvoice }) => [
     },
   }),
   columnHelper.accessor("paymentType", {
-    header: "Payment Type",
-    cell: (info) => <div className="capitalize">{info.getValue()}</div>
+    header: ({ column }) => {
+      const paymentType = [
+        {
+          value: "cash",
+          label: "Cash",
+        },
+        {
+          value: "card",
+          label: "Card",
+        },
+        {
+          value: "qrPayment",
+          label: "QR Payment",
+        },
+        {
+          value: "bankTransfer",
+          label: "Bank Transfer",
+        }
+      ];
+      return (
+        <DataTableStatusColumnHeader title={"Payment Type"} column={column} statuses={paymentType} withPaymentIcon />
+      )
+    },
+    cell: (info) => {
+      const PaymentTypeIcon = 
+        info.getValue() === 'cash' ? Banknote :
+        info.getValue() === 'card' ? CreditCard :
+        info.getValue() === 'qrPayment' ? QrCode :
+        Landmark;
+      return (
+      <div className="flex items-center gap-2 capitalize">
+        <PaymentTypeIcon className="size-4" />
+        {info.getValue()}
+      </div>
+    )}
   }),
   columnHelper.accessor("status", {
     header: ({ column }) => {
@@ -276,7 +309,7 @@ export const salesColumns = ({ editInvoice }) => [
         },
       ];
       return (
-        <DataTableStatusColumnHeader column={column} statuses={salesStatus} />
+        <DataTableStatusColumnHeader column={column} title="Status" statuses={salesStatus} />
       );
     },
     cell: (info) => {

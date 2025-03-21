@@ -101,7 +101,7 @@ const Inventory = () => {
           </Button> : null}
         </div>
         <Link to={"new-medicine"}>
-        <Button>
+        <Button variant="green" className="cursor-pointer">
           Add Medicine
         </Button>
         </Link>

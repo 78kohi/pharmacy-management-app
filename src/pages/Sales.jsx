@@ -19,6 +19,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CalendarDatePicker } from "@/components/calendar-date-picker";
 import { FilterX } from "lucide-react";
 import { useSales } from "@/hooks/use-sales";
+import { Input } from "@/components/ui/input";
 
 const Sales = () => {
   const [sorting, setSorting] = React.useState([]);
@@ -30,6 +31,7 @@ const Sales = () => {
     pageSize: 5,
   });
   const [dateRange, setDateRange] = React.useState({});
+  const [search, setSearch] = React.useState("");
   const { editInvoice, invoices: data } = useSales();
   const columns = useMemo(() =>
     salesColumns({ editInvoice }),
@@ -76,6 +78,12 @@ const Sales = () => {
     },
   });
 
+  const handleSearchInvoice = (e) => {
+    const invoiceId = e.target.value;
+    setSearch(invoiceId);
+    table.getColumn("invoiceId")?.setFilterValue(invoiceId);
+  }
+
   return (
     <section className="py-2 px-4 bg-[#F6F6F6] h-full">
       <h1 className="text-2xl font-medium mb-4">Sales Information</h1>
@@ -87,7 +95,12 @@ const Sales = () => {
           </div>
           <div className="flex flex-col">
             <p className="text-sm text-gray-500">Invoice ID</p>
-            <ComboBox table={table} />
+            <Input 
+              placeholder="20251015001" 
+              className="bg-background"
+              value={search}
+              onChange={handleSearchInvoice}
+            />
           </div>
           <div className="flex flex-col">
             <h5 className="text-sm text-gray-500">Date Range</h5>

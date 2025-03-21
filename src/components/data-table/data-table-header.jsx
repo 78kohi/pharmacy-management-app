@@ -11,6 +11,7 @@ import {
 import { ArrowDown, ArrowUp, ArrowUpDown, CheckIcon, ListFilter, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "../ui/command";
+import { Banknote, CreditCard, Landmark, QrCode} from "lucide-react"
 
 export function DataTableColumnHeader({ column, title, className }) {
   if (!column.getCanSort()) {
@@ -66,7 +67,7 @@ export function DataTableColumnHeader({ column, title, className }) {
   );
 }
 
-export const DataTableStatusColumnHeader = ({ column, className, statuses }) => {
+export const DataTableStatusColumnHeader = ({ column, className, title, statuses, withPaymentIcon }) => {
   const facets = column?.getFacetedUniqueValues(); 
   const selectedValues = new Set(column?.getFilterValue()); 
 
@@ -76,16 +77,16 @@ export const DataTableStatusColumnHeader = ({ column, className, statuses }) => 
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
-            size="sm"
+            size="columnHeader"
             className="-ml-3 h-8 data-[state=open]:bg-accent"
           >
-            Status
+            {title}
             <ListFilter />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
           <Command>
-            <CommandInput placeholder={"Status"} />
+            <CommandInput placeholder={title} />
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
@@ -102,7 +103,17 @@ export const DataTableStatusColumnHeader = ({ column, className, statuses }) => 
                       ? "bg-yellow-200 text-yellow-600"
                       : status.value === "expiring"
                       ? "bg-orange-200 text-orange-600"
-                      : "bg-red-200 text-red-600";
+                      : status.value === "expired" 
+                      ? "bg-red-200 text-red-600" :
+                      "bg-gray-200 text-gray-600";
+                  const paymentTypeIcon = 
+                    status.value === 'card' 
+                    ? <CreditCard className="size-4 mr-2" /> 
+                    : status.value === 'cash' 
+                    ? <Banknote className="size-4 mr-2" /> 
+                    : status.value === 'qrPayment' 
+                    ? <QrCode className="size-4 mr-2" /> 
+                    : <Landmark className="size-4 mr-2" />
                   return (
                     <CommandItem
                       key={status.value}
@@ -134,12 +145,14 @@ export const DataTableStatusColumnHeader = ({ column, className, statuses }) => 
                       <span
                         className={`inline-flex items-center px-2 capitalize font-medium rounded ${bgColor}`}
                       >
-                        <svg
+                        {withPaymentIcon 
+                        ? paymentTypeIcon
+                        : (<svg
                           className={`h-3 w-3 fill-current mr-1`}
                           viewBox="0 0 100 100"
                         >
                           <circle cx="50" cy="50" r="40" />
-                        </svg>
+                        </svg>)}
                         {status.label}
                       </span>
                       {facets?.get(status.value) && (

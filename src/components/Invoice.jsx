@@ -2,7 +2,7 @@
 import React from "react";
 import { Separator } from "./ui/separator";
 import { format } from "date-fns";
-import { Info, Minus, Plus, SquarePen, X } from "lucide-react";
+import { Banknote, CreditCard, Info, Landmark, Minus, Plus, QrCode, SquarePen, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -26,6 +26,7 @@ import {tableData as medicinesData } from "@/dummy-data/medicines";
 import { calculateLateFee, formatMoney } from "@/lib/formatMoney";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Label } from "./ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Invoice = ({
 invoiceId,
@@ -121,6 +122,22 @@ onSave,
     if(match) setEditedValues((prev) => ({ ...prev, paidAmount: match[0] || "" }))
   }
 
+  const paymentTypeIcon = 
+    editedValues.paymentType === 'card' ?
+    <CreditCard className="size-4" /> :
+    editedValues.paymentType === 'cash' ?
+    <Banknote className="size-4" /> :
+    editedValues.paymentType === 'qr payment' ?
+    <QrCode className="size-4" /> :
+    <Landmark className="size-4" />
+  
+  const avatarJSX = (
+    <Avatar className="size-6">
+      <AvatarImage src={`https://avatar.iran.liara.run/public/?username=${editedValues.customer}`} alt="avatar" />
+      <AvatarFallback>AV</AvatarFallback>
+    </Avatar>
+  );
+
   return (
     <div className="flex flex-col rounded bg-white flex-2 h-130 w-full p-2">
       <div className="flex justify-between items-center">
@@ -195,7 +212,7 @@ onSave,
           : null}
       </div>
       <Separator className="text-lg mt-2" />
-      <Sheet>
+      {editable && <Sheet>
         <SheetTrigger className="mt-2 mx-auto flex items-center text-muted-foreground hover:text-black/90 cursor-pointer transition gap-2">
           <Plus className="size-4" />
           <p className="text-sm select-none">Add medicine</p>
@@ -236,7 +253,7 @@ onSave,
             })}
           </div>
         </SheetContent>
-      </Sheet>
+      </Sheet>}
       <div className="flex flex-col mt-auto">
         <h1 className="">Payment</h1>
         <Separator className="my-2" />
@@ -257,7 +274,7 @@ onSave,
             <span className="flex justify-between items-center min-w-70">
               Paid Amount:
               <Label className="group flex items-center gap-1">
-                <SquarePen className="h-3 w-3 text-gray-800 opacity-0 group-hover:opacity-100 transition" />
+                <SquarePen className={`h-3 w-3 text-gray-800 opacity-0 ${editable ? 'group-hover:opacity-100' : ''} transition`} />
                 {editable ? 
                 editPaidAmount ? 
                ( <Input
@@ -285,7 +302,7 @@ onSave,
             </span>
             <span className="flex justify-between items-center min-w-70">
               Due Date:
-              <p className="">{format(dueDate, "PPPp")}</p>
+              <p className="">{format(dueDate, "PPP")}</p>
             </span>
             <span className="flex justify-between items-center min-w-70">
               <span className="flex items-center gap-2">
@@ -309,41 +326,56 @@ onSave,
             </span>
             <span className="flex justify-between items-center min-w-70">
               Customer:
+              <span className={`flex items-center ${editable ? "" : "gap-2"}`}>
               {editable ? (
                 <CustomersComboBox
-                  width={"w-40"}
-                  variant="ghost"
-                  value={editedValues.customer}
-                  setValue={(value) =>
-                    setEditedValues((prev) => ({ ...prev, customer: value }))
-                  }
+                width={"100"}
+                variant="ghost"
+                value={editedValues.customer}
+                setValue={(value) =>
+                  setEditedValues((prev) => ({ ...prev, customer: value }))
+                }
+                avatar={avatarJSX}
                 />
               ) : (
+                <>
+                <Avatar className="size-6">
+                  <AvatarImage src="https://avatar.iran.liara.run/public" alt="avatar" />
+                  <AvatarFallback>AV</AvatarFallback>
+                </Avatar>
                 <p className="capitalize">{customer}</p>
+                </>
               )}
+              </span>
             </span>
             <span className="flex justify-between items-center min-w-70">
               Payment Type:
+              <span className={`flex items-center ${editable ? "" : "gap-2"}`}>
               {editable ? (
                 <Select
-                  value={editedValues.paymentType}
-                  onValueChange={(value) =>
+                value={editedValues.paymentType}
+                onValueChange={(value) =>
                     setEditedValues((prev) => ({ ...prev, paymentType: value }))
                   }
                 >
                   <SelectTrigger className="max-w-35 h-8 hover:bg-accent" noBorder>
+                    {paymentTypeIcon}
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="cash">Cash</SelectItem>
                     <SelectItem value="card">Card</SelectItem>
-                    <SelectItem value="qr Payment">QR Payment</SelectItem>
+                    <SelectItem value="qr payment">QR Payment</SelectItem>
                     <SelectItem value="bank transfer">Bank Transfer</SelectItem>
                   </SelectContent>
                 </Select>
               ) : (
+                <>
+                {paymentTypeIcon}
                 <p className="capitalize">{paymentType}</p>
+                </>
               )}
+            </span>
             </span>
           </div>
         </div>
