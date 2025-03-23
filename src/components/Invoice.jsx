@@ -2,7 +2,7 @@
 import React from "react";
 import { Separator } from "./ui/separator";
 import { format } from "date-fns";
-import { Banknote, CreditCard, Info, Landmark, Minus, Plus, QrCode, SquarePen, X } from "lucide-react";
+import { Banknote, CreditCard, Info, Landmark, Minus, Plus, QrCode, SquarePen, Trash, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,8 +12,6 @@ import {
 } from "./ui/select";
 import { CustomersComboBox } from "./combo-box";
 import { Input } from "./ui/input";
-import { SingleCalendar } from "./ui/single-calendar";
-import { CalendarDatePicker } from "./calendar-date-picker";
 import { DatePicker } from "./date-picker";
 import { Button } from "./ui/button";
 import {
@@ -27,6 +25,8 @@ import { calculateLateFee, formatMoney } from "@/lib/formatMoney";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Label } from "./ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useSales } from "@/hooks/use-sales";
+import { toast } from "sonner";
 
 const Invoice = ({
 invoiceId,
@@ -47,14 +47,17 @@ onSave,
     date: new Date(date),
     dueDate: new Date(dueDate),
   });
+  console.log(editedValues)
   const [editPaidAmount, setEditPaidAmount] = React.useState(false);
-  console.log(editedValues.medicines)
+  const { deleteInvoice } = useSales();
 
   const totalPrice = editedValues.medicines.reduce((acc, med) => acc + med.totalPrice, 0)
   const netTotal = totalPrice + calculateLateFee(editedValues.date, editedValues.dueDate);
 
   const isPaid = editedValues.paidAmount >= netTotal;
   const change = isPaid ? formatMoney(editedValues.paidAmount - netTotal) : "not paid";
+
+  const camelToCapitalize = (str) => str.replace(/([A-Z])/g, " $1").replace(/^./, (match) => match.toUpperCase()).trim()
   
   const addToInvoice = (medicine) => {
     setEditedValues((prev) => {
@@ -127,7 +130,7 @@ onSave,
     <CreditCard className="size-4" /> :
     editedValues.paymentType === 'cash' ?
     <Banknote className="size-4" /> :
-    editedValues.paymentType === 'qr payment' ?
+    editedValues.paymentType === 'qrPayment' ?
     <QrCode className="size-4" /> :
     <Landmark className="size-4" />
   
@@ -358,21 +361,21 @@ onSave,
                     setEditedValues((prev) => ({ ...prev, paymentType: value }))
                   }
                 >
-                  <SelectTrigger className="max-w-35 h-8 hover:bg-accent" noBorder>
+                  <SelectTrigger className="max-w-40 h-8 hover:bg-accent" noBorder>
                     {paymentTypeIcon}
-                    <SelectValue placeholder="Select..." />
+                    <SelectValue placeholder="Select..." value={editedValues.paymentType} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="cash">Cash</SelectItem>
                     <SelectItem value="card">Card</SelectItem>
-                    <SelectItem value="qr payment">QR Payment</SelectItem>
-                    <SelectItem value="bank transfer">Bank Transfer</SelectItem>
+                    <SelectItem value="qrPayment">QR Payment</SelectItem>
+                    <SelectItem value="bankTransfer">Bank Transfer</SelectItem>
                   </SelectContent>
                 </Select>
               ) : (
                 <>
                 {paymentTypeIcon}
-                <p className="capitalize">{paymentType}</p>
+                <p className="capitalize">{camelToCapitalize(paymentType)}</p>
                 </>
               )}
             </span>
@@ -380,8 +383,20 @@ onSave,
           </div>
         </div>
       </div>
-      <div className="mt-2">
+      <div className="mt-2 grid grid-cols-2 gap-2">
         {editable && (
+          <>
+          <Button
+            onClick={() => {
+              deleteInvoice(invoiceId);
+              toast.success(`Invoice ${invoiceId} deleted successfully`);
+            }}
+            className="w-full text-red-600 hover:text-red-600"
+            variant="ghost"
+            >
+            <Trash />
+            Delete
+          </Button>
           <Button
             onClick={() => onSave(editedValues)}
             className="w-full"
@@ -389,6 +404,7 @@ onSave,
           >
             Save
           </Button>
+          </>
         )}
       </div>
     </div>

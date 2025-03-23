@@ -18,6 +18,10 @@ export const SalesProvider = ({ children }) => {
     setInvoices([...invoices, invoice])
   }
 
+   const deleteInvoice = (id) => {
+    setInvoices((prevInvoices) => prevInvoices.filter((invoice) => invoice.invoiceId !== id));
+  };
+
   const editInvoice = (invoiceId, updatedData) => {
     setInvoices((prevInvoices) =>
       prevInvoices.map((invoice) =>
@@ -46,7 +50,7 @@ export const SalesProvider = ({ children }) => {
   }
 
   return (
-    <SalesContext.Provider value={{ invoices, addInvoice, editInvoice }}>
+    <SalesContext.Provider value={{ invoices, addInvoice, editInvoice, deleteInvoice }}>
       {children}
     </SalesContext.Provider>
   )

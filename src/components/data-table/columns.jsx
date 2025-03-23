@@ -1,19 +1,14 @@
 import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Banknote, CreditCard, Eye, FileDown, Landmark, MoreHorizontal, Printer, QrCode, SquarePen } from "lucide-react"
+import { Banknote, CreditCard, Eye, FileDown, Landmark, Printer, QrCode, SquarePen } from "lucide-react"
 import { createColumnHelper } from "@tanstack/react-table";
 import { format, parseISO, isWithinInterval } from "date-fns";
 import { toast } from "sonner";
 import { DataTableColumnHeader, DataTableStatusColumnHeader } from "./data-table-header";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import Invoice from "../Invoice";
+import { categories } from "@/dummy-data/medicines";
+import DropdownWithDialog from "./DropdownWithDialog";
 
 const columnHelper = createColumnHelper();
 
@@ -55,7 +50,15 @@ export const medColumns = [
     cell: (info) => <div className="lowercase">{info.getValue()}</div>,
   }),
   columnHelper.accessor("category", {
-    header: "Category",
+    header: ({ column }) => {
+      const categoriesLabel = categories.map(category => {
+        return {
+          value: category,
+          label: category.charAt(0).toUpperCase() + category.slice(1)
+        }
+      })
+      return <DataTableStatusColumnHeader column={column} statuses={categoriesLabel} title="Category" />;
+    },
     cell: (info) => <div className="capitalize">{info.getValue()}</div>,
   }),
   columnHelper.accessor("purchaseDate", {
@@ -72,7 +75,7 @@ export const medColumns = [
   columnHelper.accessor("expiryDate", {
     header: "Expiry Date",
     cell: (info) => format(parseISO(info.getValue()), "PPP"),
-filterFn: (row, columnId, filterValue) => {
+    filterFn: (row, columnId, filterValue) => {
       const expiryDate = parseISO(row.getValue(columnId));
       return isWithinInterval(expiryDate, {
         start: filterValue.startDate,
@@ -121,7 +124,7 @@ filterFn: (row, columnId, filterValue) => {
           label: "Expired",
         },
       ];
-      return <DataTableStatusColumnHeader column={column} statuses={medStatus} />;
+      return <DataTableStatusColumnHeader column={column} statuses={medStatus} title="Status" />;
     },
     cell: (info) => {
       const status = info.getValue();
@@ -169,28 +172,10 @@ header: () => {
     },
     cell: ({ row }) => {
       const batchNum = row.original.batch;
+      const medicine = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => {
-                toast.success("Copied to clipboard!");
-                navigator.clipboard.writeText(batchNum);
-              }}
-            >
-              Copy batch number
-            </DropdownMenuItem>
-            <DropdownMenuItem>View medicine            </DropdownMenuItem>
-            <DropdownMenuItem>Edit medicine</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DropdownWithDialog batchNum={batchNum} medicine={medicine} />
       );
     },
   },
@@ -285,10 +270,11 @@ export const salesColumns = ({ editInvoice }) => [
         info.getValue() === 'card' ? CreditCard :
         info.getValue() === 'qrPayment' ? QrCode :
         Landmark;
+      const camelToCapitalize = (str) => str.replace(/([A-Z])/g, " $1").replace(/^./, (match) => match.toUpperCase()).trim()
       return (
       <div className="flex items-center gap-2 capitalize">
         <PaymentTypeIcon className="size-4" />
-        {info.getValue()}
+        {camelToCapitalize(info.getValue())}
       </div>
     )}
   }),
@@ -361,11 +347,6 @@ export const salesColumns = ({ editInvoice }) => [
             <DialogTrigger className="grid place-items-center bg-accent h-5 w-5 rounded">
               <Eye className="h-4 w-4 text-gray-500 hover:text-gray-700" />
             </DialogTrigger>
-            <DialogContent>
-              <Invoice 
-                {...invoice}
-              />
-            </DialogContent>
             <DialogContent>
               <Invoice 
                 {...invoice}

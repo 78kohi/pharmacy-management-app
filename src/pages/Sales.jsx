@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { ComboBox } from "@/components/combo-box";
 import { DataTable } from "@/components/data-table/data-table";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 
 import {
   getCoreRowModel,
@@ -17,7 +17,7 @@ import {
 import { salesColumns } from "@/components/data-table/columns";
 import { Toaster } from "@/components/ui/sonner";
 import { CalendarDatePicker } from "@/components/calendar-date-picker";
-import { FilterX } from "lucide-react";
+import { FilterX, Plus } from "lucide-react";
 import { useSales } from "@/hooks/use-sales";
 import { Input } from "@/components/ui/input";
 
@@ -33,10 +33,12 @@ const Sales = () => {
   const [dateRange, setDateRange] = React.useState({});
   const [search, setSearch] = React.useState("");
   const { editInvoice, invoices: data } = useSales();
+
   const columns = useMemo(() =>
     salesColumns({ editInvoice }),
     [editInvoice]
   )
+  const navigate = useNavigate();
   console.log(data)
 
   const handleDateSelect = ({ from, to }) => {
@@ -126,9 +128,14 @@ const Sales = () => {
             </Button>
           ) : null}
         </div>
-        <Link to={"new-medicine"}>
-          <Button>Add Medicine</Button>
-        </Link>
+        <Button 
+          variant="green" 
+          className="cursor-pointer"
+          onClick={() => navigate("/pos", { state: { openNewSale: true } })}
+        >
+          <Plus />
+          New Sale
+        </Button>
       </div>
       <DataTable table={table} />
       <Toaster richColors />

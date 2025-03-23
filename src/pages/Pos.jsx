@@ -4,22 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Minus, Plus, Search, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { CustomersComboBox } from "@/components/combo-box";
+import { CategoryComboBox, CustomersComboBox } from "@/components/combo-box";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useSales } from "@/hooks/use-sales";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const Pos = () => {
   const [receiptOpen, setReceiptOpen] = React.useState(false);
   const [addedMedicines, setAddedMedicines] = React.useState([]);
-  const { addInvoice, invoices } = useSales()
+  const { addInvoice, invoices } = useSales();
 
   const [paymentType, setPaymentType] = React.useState("");
   const [customer, setCustomer] = React.useState("");
 
-  const navigate = useNavigate()
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    setReceiptOpen(location.state?.openNewSale || false)
+  }, [location.state])
 
   const now = new Date();
   const dueDate = new Date(now);
@@ -120,6 +125,11 @@ const Pos = () => {
   };
 
   const saveInvoice = () => {
+    if (addedMedicines.length === 0 || !paymentType || !customer) {
+      toast.error("All inputs must be filled!") ;
+      return;
+    }
+
     const totalAmount = addedMedicines.reduce(
       (acc, item) => acc + item.totalPrice,
       0
@@ -143,7 +153,7 @@ const Pos = () => {
     setPaymentType("");
     setCustomer("");
     toast.success(`Invoice ${newInvoice.invoiceId} created successfully!`, {
-      action: <Button onClick={() => navigate('/sales')}>View invoices</Button>,
+      action: <Button variant="blue" onClick={() => navigate('/sales')}>View invoices</Button>,
     });
     console.log(newInvoice)
   }
@@ -154,8 +164,9 @@ const Pos = () => {
       <div className="flex gap-2 mb-4">
         <div className="relative">
           <Search className="absolute top-1/2 right-2 -translate-1/2 h-4 w-4" />
-          <Input placeholder="Search medicine..." className="w-[250px]" />
+          <Input placeholder="Search medicine..." className="w-[250px] bg-background" />
         </div>
+        <CategoryComboBox />
         <Button variant={"green"} onClick={() => setReceiptOpen(true)}>
           <Plus />
           New sale
@@ -174,7 +185,7 @@ const Pos = () => {
                 key={medicine.batchNumber}
               >
                 <img
-                  src="https://placehold.co/120x100"
+                  src={`https://placehold.co/120x100?text=${medicine.medicine}`}
                   alt=""
                   className="h-25 w-30 rounded-t"
                 />
@@ -263,10 +274,6 @@ const Pos = () => {
                     </p>
                   </span>
                   <span className="flex justify-between items-center min-w-60">
-                    Late fee:
-                    <p className="">$5.00</p>
-                  </span>
-                  <span className="flex justify-between items-center min-w-60">
                     Customer:
                     <CustomersComboBox value={customer} setValue={setCustomer} variant="outline" width={"min-w-30"} />
                   </span>
@@ -312,7 +319,7 @@ const Pos = () => {
           </div>
         ) : null}
       </div>
-      <Toaster richColors />
+      <Toaster richColors closeButton />
     </section>
   );
 };

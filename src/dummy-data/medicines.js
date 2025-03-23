@@ -23,7 +23,7 @@ export const medicines = [
 
 export const tableData = [
   {
-    batch: "20230101-001",
+    batch: "PAR-2510-1001",
     medicine: "Paracetamol",
     category: "Tablet",
     purchaseDate: "2023-01-01",
@@ -33,7 +33,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20230201-002",
+    batch: "IBU-2502-1002",
     medicine: "Ibuprofen",
     category: "Tablet",
     purchaseDate: "2023-02-01",
@@ -43,7 +43,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20230301-003",
+    batch: "AMO-2503-1003",
     medicine: "Amoxicillin",
     category: "Capsule",
     purchaseDate: "2023-03-01",
@@ -53,7 +53,7 @@ export const tableData = [
     status: "low stock",
   },
   {
-    batch: "20230401-004",
+    batch: "CET-2504-1004",
     medicine: "Cetirizine",
     category: "Tablet",
     purchaseDate: "2023-04-01",
@@ -63,7 +63,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20230501-005",
+    batch: "MET-2505-1005",
     medicine: "Metformin",
     category: "Tablet",
     purchaseDate: "2023-05-01",
@@ -73,7 +73,7 @@ export const tableData = [
     status: "expired",
   },
   {
-    batch: "20230601-006",
+    batch: "ATO-2506-1006",
     medicine: "Atorvastatin",
     category: "Tablet",
     purchaseDate: "2023-06-01",
@@ -83,7 +83,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20230701-007",
+    batch: "OME-2507-1007",
     medicine: "Omeprazole",
     category: "Capsule",
     purchaseDate: "2023-07-01",
@@ -93,7 +93,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20230801-008",
+    batch: "LOS-2508-1008",
     medicine: "Losartan",
     category: "Tablet",
     purchaseDate: "2023-08-01",
@@ -103,7 +103,7 @@ export const tableData = [
     status: "low stock",
   },
   {
-    batch: "20230901-009",
+    batch: "ASP-2509-1009",
     medicine: "Aspirin",
     category: "Tablet",
     purchaseDate: "2023-09-01",
@@ -113,7 +113,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20231001-010",
+    batch: "FUR-2510-1010",
     medicine: "Furosemide",
     category: "Tablet",
     purchaseDate: "2023-10-01",
@@ -123,7 +123,7 @@ export const tableData = [
     status: "expired",
   },
   {
-    batch: "20231101-011",
+    batch: "HYD-2511-1011",
     medicine: "Hydrocortisone",
     category: "Cream",
     purchaseDate: "2023-11-01",
@@ -133,7 +133,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20231201-012",
+    batch: "INS-2512-1012",
     medicine: "Insulin",
     category: "Injection",
     purchaseDate: "2023-12-01",
@@ -143,7 +143,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20240101-013",
+    batch: "LIS-2601-1013",
     medicine: "Lisinopril",
     category: "Tablet",
     purchaseDate: "2024-01-01",
@@ -153,7 +153,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20240201-014",
+    batch: "SIM-2602-1014",
     medicine: "Simvastatin",
     category: "Tablet",
     purchaseDate: "2024-02-01",
@@ -163,7 +163,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20240301-015",
+    batch: "LEV-2603-1015",
     medicine: "Levothyroxine",
     category: "Tablet",
     purchaseDate: "2024-03-01",
@@ -173,7 +173,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20240401-016",
+    batch: "SUN-2604-1016",
     medicine: "Sunscreen",
     category: "Lotion",
     purchaseDate: "2024-04-01",
@@ -183,7 +183,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20240501-017",
+    batch: "MOI-2605-1017",
     medicine: "Moisturizer",
     category: "Cream",
     purchaseDate: "2024-05-01",
@@ -193,7 +193,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20240601-018",
+    batch: "LIP-2606-1018",
     medicine: "Lip Balm",
     category: "Ointment",
     purchaseDate: "2024-06-01",
@@ -203,7 +203,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20240701-019",
+    batch: "SHA-2607-1019",
     medicine: "Shampoo",
     category: "Liquid",
     purchaseDate: "2024-07-01",
@@ -213,7 +213,7 @@ export const tableData = [
     status: "in stock",
   },
   {
-    batch: "20240801-020",
+    batch: "CON-2608-1020",
     medicine: "Conditioner",
     category: "Liquid",
     purchaseDate: "2024-08-01",

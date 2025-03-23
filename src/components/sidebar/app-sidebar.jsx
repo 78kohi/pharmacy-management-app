@@ -62,10 +62,6 @@ const data = {
         url: "/pos"
       },
       {
-        title: "Invoice",
-        url: "/invoice"
-      },
-      {
         title: "Sales",
         url: "/sales"
       }

@@ -5,7 +5,7 @@ import { format, getMonth, getYear } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { Check, ChevronsUpDown, CalendarIcon } from 'lucide-react'
 
-import { medicines } from '@/dummy-data/medicines'
+import { categories, medicines } from '@/dummy-data/medicines'
 
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -66,6 +66,56 @@ export const ComboBox = ({ table }) => {
                     )}
                   />
                   {medicine.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}
+export const CategoryComboBox = ({ table }) => {
+  const [open, setOpen] = React.useState(false)
+  const [value, setValue] = React.useState("")
+  
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[170px] justify-between text-muted-foreground"
+        >
+          {value
+            ? categories.find((category) => category === value)
+            : "Select category..."}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandInput placeholder="Search category..." />
+          <CommandList>
+            <CommandEmpty>No medicine found.</CommandEmpty>
+            <CommandGroup>
+              {categories.map((category) => (
+                <CommandItem
+                  key={category}
+                  value={category}
+                  onSelect={(currentValue) => {
+                    setValue(currentValue === value ? "" : currentValue)
+                    setOpen(false)
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === category ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {category}
                 </CommandItem>
               ))}
             </CommandGroup>

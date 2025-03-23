@@ -2,7 +2,7 @@ import { ComboBox } from '@/components/combo-box'
 import { DataTable } from '@/components/data-table/data-table'
 import { Button } from '@/components/ui/button'
 import React from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate, useSearchParams,  } from 'react-router'
 
 import {
   getCoreRowModel,
@@ -18,7 +18,8 @@ import { tableData as data } from "@/dummy-data/medicines"
 import { medColumns as columns } from '@/components/data-table/columns' 
 import { Toaster } from '@/components/ui/sonner'
 import { CalendarDatePicker } from '@/components/calendar-date-picker'
-import { FilterX } from 'lucide-react'
+import { FilterX, Plus } from 'lucide-react'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 
 /**
  * Inventory component that displays the inventory of medicines.
@@ -35,6 +36,10 @@ const Inventory = () => {
     pageSize: 5,
   });
   const [dateRange, setDateRange] = React.useState({});
+
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate()
+  const newMedicine = searchParams.get("new-medicine");
 
   const handleDateSelect = ({ from, to }) => {
     setDateRange({ from, to });
@@ -100,12 +105,18 @@ const Inventory = () => {
             Reset Filters
           </Button> : null}
         </div>
-        <Link to={"new-medicine"}>
+        <Link to={"?new-medicine=true"}>
         <Button variant="green" className="cursor-pointer">
-          Add Medicine
+          <Plus />
+          New Medicine
         </Button>
         </Link>
       </div>
+      <Dialog open={newMedicine}>
+        <DialogContent onInteractOutside={() => navigate('/inventory')} onClose={() => navigate('/inventory')}>
+          a
+        </DialogContent>
+      </Dialog>
       <DataTable table={table} />
       <Toaster richColors />
     </section>
