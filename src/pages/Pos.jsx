@@ -1,5 +1,5 @@
 import React from "react";
-import { categories, tableData as medicines } from "@/dummy-data/medicines";
+import { tableData as medicines } from "@/dummy-data/medicines";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Minus, Plus, Search, X } from "lucide-react";

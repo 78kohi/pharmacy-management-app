@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 import { DropdownMenuItem } from './ui/dropdown-menu'
 
 const DialogItem = ({ children, triggerChildren, triggerClassName, triggerIcon }) => {
-  console.log(triggerClassName)
   return (
     <Dialog>
       <DialogTrigger asChild>

@@ -14,12 +14,15 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
-import { tableData as data } from "@/dummy-data/medicines"
 import { medColumns as columns } from '@/components/data-table/columns' 
 import { Toaster } from '@/components/ui/sonner'
 import { CalendarDatePicker } from '@/components/calendar-date-picker'
 import { FilterX, Plus } from 'lucide-react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { medicineApi } from '@/lib/api'
+import { toast } from 'sonner'
+import TableSkeleton from '@/components/skeleton/TableSkeleton'
+import NewMedicine from '@/components/NewMedicine'
 
 /**
  * Inventory component that displays the inventory of medicines.
@@ -27,6 +30,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog'
  * @returns {JSX.Element}
  */
 const Inventory = () => {
+  const [data, setData] = React.useState([])
   const [sorting, setSorting] = React.useState([])
   const [columnFilters, setColumnFilters] = React.useState([])
   const [columnVisibility, setColumnVisibility] = React.useState({})
@@ -36,6 +40,23 @@ const Inventory = () => {
     pageSize: 5,
   });
   const [dateRange, setDateRange] = React.useState({});
+
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState("")
+  React.useEffect(() => {
+    loadMedicine();
+  }, [])
+  const loadMedicine = async () => {
+    try {
+      setLoading(true)
+      const data = await medicineApi.getAllMedicines();
+      setData(data)
+    } catch (err) {
+      setError(err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate()
@@ -76,8 +97,11 @@ const Inventory = () => {
     },
   });
 
+  if(error) return toast.error(error)
+  if(data.length) console.log(data)
+
   return (
-    <section className="py-2 px-4 bg-[#F6F6F6]">
+    <section className="py-2 px-4 bg-[#F6F6F6] h-full">
       <h1 className="text-2xl font-medium mb-4">Inventory</h1>
       <div className="flex justify-between items-end">
         <div className="flex gap-4 items-end">
@@ -114,10 +138,10 @@ const Inventory = () => {
       </div>
       <Dialog open={newMedicine}>
         <DialogContent onInteractOutside={() => navigate('/inventory')} onClose={() => navigate('/inventory')}>
-          a
+          <NewMedicine />
         </DialogContent>
       </Dialog>
-      <DataTable table={table} />
+      {loading ? <TableSkeleton /> : <DataTable table={table} />}
       <Toaster richColors />
     </section>
   )

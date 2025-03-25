@@ -25,7 +25,7 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-export function DatePicker({ date, onDateSelect, className, ...props }) {
+export function DatePicker({ date, onDateSelect, className, formatStr, ...props }) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const initialDate = date instanceof Date ? date : new Date(date);
   const [selectedMonth, setSelectedMonth] = React.useState(initialDate);
@@ -59,9 +59,12 @@ export function DatePicker({ date, onDateSelect, className, ...props }) {
   return (
     <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
       <PopoverTrigger asChild>
-        <div className="flex items-center gap-2 group transition select-none">
-          <SquarePen className="h-4 w-4 text-muted-foreground group-hover:text-black" />
-          <p className="text-muted-foreground group-hover:text-black">{`${format(date, "PPPp")}`}</p>
+        <div className="flex items-center gap-2 group transition select-none relative">
+          <SquarePen className="h-3 w-3 hidden absolute -translate-1/2 top-1/2 -left-2 group-hover:block text-muted-foreground" />
+          <p className="text-muted-foreground group-hover:text-black">{`${format(
+            date,
+            formatStr
+          )}`}</p>
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">

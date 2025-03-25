@@ -47,7 +47,7 @@ export const medColumns = [
     header: ({ column }) => {
       return <DataTableColumnHeader title={"Medicine Name"} column={column} />;
     },
-    cell: (info) => <div className="lowercase">{info.getValue()}</div>,
+    cell: (info) => <div className="capitalize">{info.getValue()}</div>,
   }),
   columnHelper.accessor("category", {
     header: ({ column }) => {
