@@ -1,5 +1,4 @@
 import React from "react";
-import { tableData as medicines } from "@/dummy-data/medicines";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Minus, Plus, Search, X } from "lucide-react";
@@ -10,8 +9,11 @@ import { useSales } from "@/hooks/use-sales";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { useLocation, useNavigate } from "react-router";
+import { medicineApi } from "@/lib/api";
+import CardSkeleton from "@/components/skeleton/CardSkeleton";
 
 const Pos = () => {
+  const [medicines, setMedicines] = React.useState([])
   const [receiptOpen, setReceiptOpen] = React.useState(false);
   const [addedMedicines, setAddedMedicines] = React.useState([]);
   const { addInvoice, invoices } = useSales();
@@ -22,9 +24,27 @@ const Pos = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError]= React.useState(false)
+
   React.useEffect(() => {
     setReceiptOpen(location.state?.openNewSale || false)
   }, [location.state])
+
+  React.useEffect(() => {
+      loadMedicine();
+    }, [])
+  const loadMedicine = async () => {
+    try {
+      setLoading(true)
+      const data = await medicineApi.getAllMedicines();
+      setMedicines(data)
+    } catch (err) {
+      setError(err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const now = new Date();
   const dueDate = new Date(now);
@@ -164,7 +184,10 @@ const Pos = () => {
       <div className="flex gap-2 mb-4">
         <div className="relative">
           <Search className="absolute top-1/2 right-2 -translate-1/2 h-4 w-4" />
-          <Input placeholder="Search medicine..." className="w-[250px] bg-background" />
+          <Input
+            placeholder="Search medicine..."
+            className="w-[250px] bg-background"
+          />
         </div>
         <CategoryComboBox />
         <Button variant={"green"} onClick={() => setReceiptOpen(true)}>
@@ -172,38 +195,44 @@ const Pos = () => {
           New sale
         </Button>
       </div>
-      <div className="flex gap-4">
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-4 p-4 bg-white flex-4 max-h-[400px] overflow-y-scroll">
-          {medicines.map((medicine) => {
-            const formatted = new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-            }).format(parseFloat(medicine.unitPrice));
-            return (
-              <div
-                className="w-30 h-37 rounded bg-[#F6F6F6]"
-                key={medicine.batchNumber}
-              >
-                <img
-                  src={`https://placehold.co/120x100?text=${medicine.medicine}`}
-                  alt=""
-                  className="h-25 w-30 rounded-t"
-                />
-                <div className="flex justify-between items-center px-2 pt-1">
-                  <div>
-                    <p className="text-sm leading-none">{medicine.medicine}</p>
-                    <p className="text-sm text-muted-foreground leading-none">
-                      {formatted}
-                    </p>
+      <div className="flex gap-4 max-h-[800px] overflow-y-scroll">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-4 p-4 bg-white flex-4">
+          {loading
+            ? Array.from({ length: 7 }, (_, i) => <CardSkeleton key={i} />)
+            : error 
+            ? <p>Failed to fetch medicine</p> 
+            : medicines.map((medicine) => {
+                const formatted = new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(parseFloat(medicine.unitPrice));
+                return (
+                  <div
+                    className="w-[150px] h-[180px] rounded bg-[#F6F6F6]"
+                    key={medicine._id}
+                  >
+                    <img
+                      src={`https://placehold.co/120x100?text=${medicine.medicine}`}
+                      alt=""
+                      className="h-[125px] w-[150px] rounded-t"
+                    />
+                    <div className="flex justify-between items-center px-2 pt-1">
+                      <div>
+                        <p className="text-sm leading-none max-w-30 overflow-hidden overflow-ellipsis">
+                          {medicine.medicine}
+                        </p>
+                        <p className="text-sm text-muted-foreground leading-none">
+                          {formatted}
+                        </p>
+                      </div>
+                      <Plus
+                        className="h-5 w-5 bg-white rounded-full hover:bg-black/20 transition"
+                        onClick={() => addToReceipt(medicine)}
+                      />
+                    </div>
                   </div>
-                  <Plus
-                    className="h-5 w-5 bg-white rounded-full hover:bg-black/20 transition"
-                    onClick={() => addToReceipt(medicine)}
-                  />
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
         </div>
         {receiptOpen ? (
           <div className="flex flex-col rounded bg-white flex-2 h-105 w-30 p-2">
@@ -275,14 +304,16 @@ const Pos = () => {
                   </span>
                   <span className="flex justify-between items-center min-w-60">
                     Customer:
-                    <CustomersComboBox value={customer} setValue={setCustomer} variant="outline" width={"min-w-30"} />
+                    <CustomersComboBox
+                      value={customer}
+                      setValue={setCustomer}
+                      variant="outline"
+                      width={"min-w-30"}
+                    />
                   </span>
                   <span className="flex justify-between items-center min-w-60">
                     Payment Type:
-                    <Select
-                      value={paymentType}
-                      onValueChange={setPaymentType}
-                    >
+                    <Select value={paymentType} onValueChange={setPaymentType}>
                       <SelectTrigger className="min-w-[100px] max-w-[130px] h-8">
                         <SelectValue placeholder="Select..." />
                       </SelectTrigger>
@@ -290,15 +321,19 @@ const Pos = () => {
                         <SelectItem value="cash">Cash</SelectItem>
                         <SelectItem value="card">Card</SelectItem>
                         <SelectItem value="qrPayment">QR Payment</SelectItem>
-                        <SelectItem value="bankTransfer">Bank Transfer</SelectItem>
+                        <SelectItem value="bankTransfer">
+                          Bank Transfer
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </span>
                 </div>
               </div>
               <div className="flex gap-3 mt-3 px-3">
-                <Button 
-                  variant={"secondary"} size={"sm"} className={"flex-1"}
+                <Button
+                  variant={"secondary"}
+                  size={"sm"}
+                  className={"flex-1"}
                   onClick={() => {
                     setReceiptOpen(false);
                     setAddedMedicines([]);
@@ -308,8 +343,10 @@ const Pos = () => {
                 >
                   Cancel
                 </Button>
-                <Button 
-                  variant={"green"} size={"sm"} className={"flex-1"}
+                <Button
+                  variant={"green"}
+                  size={"sm"}
+                  className={"flex-1"}
                   onClick={() => saveInvoice()}
                 >
                   Save

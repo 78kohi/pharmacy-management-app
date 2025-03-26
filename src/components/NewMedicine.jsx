@@ -68,7 +68,7 @@ const NewMedicine = () => {
       } else {
         toast.success("Medicine added successfully!", { id: toastId });
         new Promise((resolve) => setTimeout(resolve, 1500)).then(() => {
-          navigate(-1)
+          navigate("/inventory")
           window.location.reload();
         });
       }
